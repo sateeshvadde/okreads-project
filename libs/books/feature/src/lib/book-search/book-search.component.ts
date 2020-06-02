@@ -10,6 +10,7 @@ import {
 import { FormBuilder } from '@angular/forms';
 import { Book } from '@tmo/shared/models';
 import { Observable } from 'rxjs';
+import { debounce } from 'lodash';
 
 @Component({
   selector: 'tmo-book-search',
@@ -26,7 +27,10 @@ export class BookSearchComponent implements OnInit {
   constructor(
     private readonly store: Store,
     private readonly fb: FormBuilder
-  ) {}
+  ) {
+    //Debounce ensures that there is a delay in the execution of an action thereby ensuring lower number of API calls here
+    this.searchBooks = debounce(this.searchBooks,500);
+  }
 
   get searchTerm(): string {
     return this.searchForm.value.term;
