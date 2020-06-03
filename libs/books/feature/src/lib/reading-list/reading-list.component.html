@@ -9,6 +9,26 @@
         {{ b.authors.join(',') }}
       </div>
     </div>
+    <div *ngIf="!b.finished">
+      <button
+        mat-icon-button
+        color="primary"
+        class="mark-as-read"
+        [attr.aria-label]="b.finishedDate"
+        (click)="markAsReadFromReadingList(b)"
+      >
+      <mat-icon class="done">done</mat-icon>
+      </button>
+    </div>
+    <div *ngIf="b.finished">
+      <button
+        mat-icon-button
+        color="primary"
+        [attr.aria-label]="b.finishedDate"
+      >
+      <mat-icon class="done_all">done_all</mat-icon>
+      </button>
+    </div>
     <div>
       <button
         mat-icon-button
