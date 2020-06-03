@@ -51,6 +51,28 @@ export class ReadingListEffects implements OnInitEffects {
     )
   );
 
+  markAsFinished$ = createEffect(() =>
+  this.actions$.pipe(
+    ofType(ReadingListActions.markAsfinishedFromReadingList),
+    optimisticUpdate({
+      run: ({ item }) => {
+        return this.http.put(`/api/reading-list/${item.bookId}/finished`,{}).pipe(
+          map(() =>
+            ReadingListActions.confirmedMarkAsfinishedFromReadingList({
+              item
+            })
+          )
+        );
+      },
+      undoAction: ({ item }) => {
+        return ReadingListActions.failedMarkAsfinishedFromReadingList({
+          item
+        });
+      }
+    })
+  )
+);
+
   removeBook$ = createEffect(() =>
     this.actions$.pipe(
       ofType(ReadingListActions.removeFromReadingList),
