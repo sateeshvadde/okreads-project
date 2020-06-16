@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, ViewChild, ElementRef } from '@angular/core';
 import { Store } from '@ngrx/store';
 import {
   addToReadingList,
@@ -10,7 +10,12 @@ import {
 import { FormBuilder } from '@angular/forms';
 import { Book } from '@tmo/shared/models';
 import { Observable } from 'rxjs';
-import { debounce } from 'lodash';
+import { fromEvent } from 'rxjs';
+import {
+  debounceTime,
+  map,
+  distinctUntilChanged
+} from "rxjs/operators";
 
 @Component({
   selector: 'tmo-book-search',
@@ -24,12 +29,13 @@ export class BookSearchComponent implements OnInit {
     term: ''
   });
 
+  @ViewChild('bookSearchInput', { static: true }) bookSearchInput: ElementRef;
+
   constructor(
     private readonly store: Store,
     private readonly fb: FormBuilder
   ) {
-    //Debounce ensures that there is a delay in the execution of an action thereby ensuring lower number of API calls here
-    this.searchBooks = debounce(this.searchBooks,500);
+     
   }
 
   get searchTerm(): string {
@@ -38,6 +44,16 @@ export class BookSearchComponent implements OnInit {
 
   ngOnInit(): void {
     this.books$ = this.store.select(getAllBooks);
+    //Debounce ensures that there is a delay in the execution of an action thereby ensuring lower number of API calls here
+    fromEvent(this.bookSearchInput.nativeElement, 'keyup').pipe(
+      map((event: any) => {
+        return event.target.value;
+      })
+      , debounceTime(1000)  
+      , distinctUntilChanged()
+      ).subscribe((text: string) => {
+          this.searchBooks();
+      });
   }
 
   formatDate(date: void | string) {
