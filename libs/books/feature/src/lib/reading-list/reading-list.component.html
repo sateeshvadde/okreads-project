@@ -11,18 +11,17 @@
     </div>
     <div *ngIf="!b.finished">
       <button
-        mat-icon-button
-        color="primary"
+        mat-raised-button
         class="mark-as-read"
         [attr.aria-label]="b.finishedDate"
         (click)="markAsReadFromReadingList(b)"
-      >
-      <mat-icon class="done">done</mat-icon>
+      >Mark As Read
       </button>
     </div>
     <div *ngIf="b.finished">
       <button
         mat-icon-button
+        matTooltip="Read"        
         color="primary"
         [attr.aria-label]="b.finishedDate"
       >

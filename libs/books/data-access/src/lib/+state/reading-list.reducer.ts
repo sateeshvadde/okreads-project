@@ -1,5 +1,5 @@
 import { Action, createReducer, on } from '@ngrx/store';
-import { createEntityAdapter, EntityAdapter, EntityState } from '@ngrx/entity';
+import { createEntityAdapter, EntityAdapter, EntityState, Update } from '@ngrx/entity';
 
 import * as ReadingListActions from './reading-list.actions';
 import { ReadingListItem } from '@tmo/shared/models';
@@ -53,8 +53,13 @@ const readingListReducer = createReducer(
   on(ReadingListActions.removeFromReadingList, (state, action) =>
     readingListAdapter.removeOne(action.item.bookId, state)
   ),
-  on(ReadingListActions.markAsfinishedFromReadingList, (state, action) =>
-    readingListAdapter.upsertOne(action.item, state)
+  on(ReadingListActions.markAsfinishedFromReadingList, (state, action) => {
+    const todoUpdate: Update<ReadingListItem> = {
+      id: action.item.bookId,
+      changes: { finished : !action.item.finished }
+    };
+    return readingListAdapter.updateOne(todoUpdate, state)
+  }
   )
 );
 
