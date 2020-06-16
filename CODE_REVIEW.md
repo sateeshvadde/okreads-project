@@ -1,6 +1,8 @@
 1. In the component "book-search", subscribe is used but the subscription is no where being caught and destroyed. Failing to unsubscribe may lead to memory leaks and to solve this, either we have to unsubscribe the subscription or can make use of an async pipe.
 
 2. In the component "reading-list", images are used but there is no alternate text associated with them. It can at times result in Web accessibility issues. Similarly, I believe its good to have a link on the tile so that on click, it opens up as a full page modal showing some additional information. At the same time, I think its good to have tooltips on the button's.
+We can avoid using autoFocus attribute in the "book-search" component. We can add aria-labels to buttons, say one to the "Want to Read" button in "book-search"
+component. We can enable tab-index for all the search results to enable easy navigation between all search results.
 
 3. In the component "reading-list", entire list of all books are loaded in DOM at once. When the list is too large, it can slow down page rendering. Virtual scrolling/ Progressive Rendering are two good options that can be implemented to avoid slowness in rendering. 
 
